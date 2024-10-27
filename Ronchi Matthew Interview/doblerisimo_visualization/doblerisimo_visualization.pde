@@ -11,7 +11,7 @@ void setup() {
     background(255);
     
     // Initialize the audio input.
-    audioFile = new SoundFile(this, "Ronchi1Stereo.mp3"); // Load the audio file.
+    audioFile = new SoundFile(this, "Ronchi1StereoResampled.mp3"); // Load the audio file.
     audioFile.loop(); // Play the audio file on loop.
     amplitude = new Amplitude(this); // Create a new Amplitude object.
     amplitude.input(audioFile); // Set the audio file as the input.

@@ -29,6 +29,7 @@ class Letter {
     void display() {
         pushMatrix(); // Save the current transformation state.
         translate(position.x, position.y); // Move to the letter's position.
+        fill(0);
         textSize(currentHeight); // Set the text size based on current height.
         text(character, 0, 0); // Draw the character.
         popMatrix(); // Restore the previous transformation state.
