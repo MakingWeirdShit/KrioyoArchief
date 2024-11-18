@@ -134,6 +134,16 @@ void spiralWarp() {
 
   // Calculate the angle step based on the number of valid letters
   angleStep = 360.0 / validLetterCount;
+  
+   //store the warp letters its width and height in a variable
+  
+  float tempHeight = 128;
+
+
+  //warp in x based on cos.
+
+  float warpFactor = 2;
+  float tempWidth = warpLetter.width * cos(angleForWarp) * warpFactor + minimumHeight;
 
   // Loop to draw letters on the circle
   int validLetterIndex = 0;  // To keep track of valid letters only
@@ -151,7 +161,7 @@ void spiralWarp() {
         push();
         translate(x, y);
         rotate(radians(angle));
-        image(currentLetter, 0, 0, 50, 50);  // Draw the letter at the correct position
+        image(currentLetter, 0, 0, tempWidth, tempHeight);  // Draw the letter at the correct position
         pop();
       } else {
         println("Image not loaded for letter: " + currentChar);
@@ -162,12 +172,13 @@ void spiralWarp() {
       // Skip invalid characters (spaces)
       println("Skipping invalid character: " + currentChar);
       validLetterIndex++;
-      angle -= angleStep;
+      angle -= angleStep; //we want to increment the valid letter index so we bruhs over the space but then spatially we cant go forward so we go back
     }
   }
 
-  // Reset validLetterIndex at the end of the function for the next draw
-  // letterIndex = 0; // Not necessary now since we are using validLetterIndex for the loop
+
+   angleForWarp += 0.03;
+ 
 }
 
 
