@@ -14,7 +14,7 @@ int maximumWidth = 200;
 String textToDisplay = "RONCHI MATTHEW"; // The text you want to visualize.
 
 float spinAngleStart = 0;
-int radius = 300;
+int radius = 241;
 float angleStep;
 
 int letterIndex = 0;
@@ -42,13 +42,14 @@ void setup() {
 
   imageMode(CENTER);
 
+  
   angleStep = 360.0 / (textToDisplay.length() - countSpaces(textToDisplay));
 }
 
 
 void draw() {
 
-
+  minimumWidth = 6;
   spiralWarp();
 }
 
@@ -136,13 +137,13 @@ void spiralWarp() {
 
   //store the warp letters its width and height in a variable
 
-  float tempHeight = 128;
+  float tempHeight = 91;
 
 
   //warp in x based on cos.
 
   float warpFactor = 2;
-  float tempWidth = warpLetter.width * cos(angleForWarp) * warpFactor + minimumHeight;
+  float tempWidth = warpLetter.width * cos(angleForWarp) * warpFactor + minimumWidth;
 
   // Loop to draw letters on the circle
   int validLetterIndex = 0;  // To keep track of valid letters only
@@ -150,46 +151,49 @@ void spiralWarp() {
     float x = cos(radians(angle)) * radius;
     float y = sin(radians(angle)) * radius;
 
-    if(validLetterIndex < textToDisplay.length()){
-    println("letter length: " + letters.length + "index " + validLetterIndex);
-    char currentChar = textToDisplay.charAt(validLetterIndex);
+    if (validLetterIndex < textToDisplay.length()) {
+      println("letter length: " + letters.length + "index " + validLetterIndex);
+      char currentChar = textToDisplay.charAt(validLetterIndex);
 
-    if (currentChar != ' ' && currentChar >= 'A' && currentChar <= 'Z') { // Only process valid letters
-      int letterIndexASCII = currentChar - 'A'; // Calculate index inside the valid range
-      PImage currentLetter = letters[letterIndexASCII];
+      if (currentChar != ' ' && currentChar >= 'A' && currentChar <= 'Z') { // Only process valid letters
+        int letterIndexASCII = currentChar - 'A'; // Calculate index inside the valid range
+        PImage currentLetter = letters[letterIndexASCII];
 
-      if (currentLetter != null) { // Ensure the image is loaded
-        push();
-        translate(x, y);
-        rotate(radians(angle));
-        image(currentLetter, 0, 0, tempWidth, tempHeight);  // Draw the letter at the correct position
+        if (currentLetter != null) { // Ensure the image is loaded
+          push();
+          translate(x, y);
+          rotate(radians(angle));
+          image(currentLetter, 0, 0, tempWidth, tempHeight);  // Draw the letter at the correct position
+          pop();
 
-        float radiusMultiplier = 1.1;
-        translate(x, y);
-        x = cos(radians(angle)) * radius * radiusMultiplier;
-        y = sin(radians(angle)) * radius * radiusMultiplier ;
-        image(currentLetter, 0, 0, tempWidth, tempHeight);
-        pop();
+
+          push();
+          float radiusMultiplier = 1.8;
+          x = cos(radians(angle)) * radius * radiusMultiplier;
+          y = sin(radians(angle)) * radius * radiusMultiplier ;
+          translate(x, y);
+
+          image(currentLetter, 0, 0, tempWidth, tempHeight);
+          pop();
+        } else {
+          println("Image not loaded for letter: " + currentChar);
+        }
+        println(currentChar, validLetterIndex);
+        //validLetterIndex++;  // Increment valid letter index
       } else {
-        println("Image not loaded for letter: " + currentChar);
+        // Skip invalid characters (spaces)
+        println("Skipping invalid character: " + currentChar + " " + validLetterIndex);
+        //validLetterIndex++;
+
+
+        angle -= angleStep; //we want to increment the valid letter index so we bruhs over the space but then spatially we cant go forward so we go back
       }
-      println(currentChar, validLetterIndex);
-      //validLetterIndex++;  // Increment valid letter index
-    } else {
-      // Skip invalid characters (spaces)
-      println("Skipping invalid character: " + currentChar + " " + validLetterIndex);
-      //validLetterIndex++;
-
-
-      angle -= angleStep; //we want to increment the valid letter index so we bruhs over the space but then spatially we cant go forward so we go back
-    }
-    validLetterIndex++;
-    
+      validLetterIndex++;
     }
   }
-  
-  
-  
+
+
+
 
 
   angleForWarp += 0.03;
