@@ -2,7 +2,7 @@
 PImage warpLetter;
 int startHeight, startWidth;
 float angleForWarp = 0; //NOTE, using an int here(would be wrong) but it gives us weird resultsx
-
+PImage[] letters;
 
 
 
@@ -11,23 +11,45 @@ int minimumWidth = 50;
 
 int maximumHeight = 200;
 int maximumWidth = 200;
+String textToDisplay = "RONCHI MATTHEW"; // The text you want to visualize.
 
+float spinAngleStart = 0;
+int radius = 300;
+float angleStep;
+
+int letterIndex = 0;
 void setup() {
-  size(800, 800);
+  size(1000, 1000);
   warpLetter = loadImage("data/R.png");
   startHeight = warpLetter.height;
   startWidth = warpLetter.width;
 
+  letters = new PImage[26]; // 26 letters in the alphabet
+  for (int i = 0; i < textToDisplay.length(); i++) {
+    char letter = textToDisplay.charAt(i);
+    if (letter != ' ' && letter >= 'A' && letter <= 'Z') { // Only load valid uppercase letters
+      int index = letter - 'A';
+      String imagePath = "data/" + letter + ".png";
+      letters[index] = loadImage(imagePath);
+
+      if (letters[index] == null) {
+        println("Image for letter '" + letter + "' not found at: " + imagePath);
+      }
+    }
+  }
+
+
+
   imageMode(CENTER);
+
+  angleStep = 360.0 / (textToDisplay.length() - countSpaces(textToDisplay));
 }
 
 
 void draw() {
 
 
-  simpleWarpIntendedEffect();
-  
-  
+  spiralWarp();
 }
 
 //under this we will put code for iterations in order, this to keep older code
@@ -75,7 +97,7 @@ void simpleGoofyWarpInY() {
 }
 
 
-void simpleWarpIntendedEffect(){ //actual intended warp i wanted to make
+void simpleWarpIntendedEffect() { //actual intended warp i wanted to make
   background(255);
 
   //i want sum code that will warp my letter back and forth bigger and smaller but only on the y axis or x axis or both depending on what i decide
@@ -93,7 +115,69 @@ void simpleWarpIntendedEffect(){ //actual intended warp i wanted to make
   image(warpLetter, width/2, height/2, tempWidth, tempHeight);
 
   angleForWarp += 0.03;
-  
-  
-  
+}
+
+void spiralWarp() {
+  background(255);
+
+  translate(width / 2, height / 2); // Center the visualization
+
+  // Count the valid letters (non-space, A-Z)
+  int validLetterCount = 0;
+  for (int i = 0; i < textToDisplay.length(); i++) {
+    char currentChar = textToDisplay.charAt(i);
+    if (currentChar != ' ' && currentChar >= 'A' && currentChar <= 'Z') {
+      validLetterCount++;
+     
+    }
+  }
+
+  // Calculate the angle step based on the number of valid letters
+  angleStep = 360.0 / validLetterCount;
+
+  // Loop to draw letters on the circle
+  int validLetterIndex = 0;  // To keep track of valid letters only
+  for (float angle = spinAngleStart; angle < spinAngleStart + 360; angle += angleStep) {
+    float x = cos(radians(angle)) * radius;
+    float y = sin(radians(angle)) * radius;
+
+    char currentChar = textToDisplay.charAt(validLetterIndex);
+
+    if (currentChar != ' ' && currentChar >= 'A' && currentChar <= 'Z') { // Only process valid letters
+      int letterIndexASCII = currentChar - 'A'; // Calculate index inside the valid range
+      PImage currentLetter = letters[letterIndexASCII];
+
+      if (currentLetter != null) { // Ensure the image is loaded
+        push();
+        translate(x, y);
+        rotate(radians(angle));
+        image(currentLetter, 0, 0, 50, 50);  // Draw the letter at the correct position
+        pop();
+      } else {
+        println("Image not loaded for letter: " + currentChar);
+      }
+  println(currentChar);
+      validLetterIndex++;  // Increment valid letter index
+    } else {
+      // Skip invalid characters (spaces)
+      println("Skipping invalid character: " + currentChar);
+      validLetterIndex++;
+      angle -= angleStep;
+    }
+  }
+
+  // Reset validLetterIndex at the end of the function for the next draw
+  // letterIndex = 0; // Not necessary now since we are using validLetterIndex for the loop
+}
+
+
+// Utility function to count spaces in the string
+int countSpaces(String str) {
+  int count = 0;
+  for (int i = 0; i < str.length(); i++) {
+    if (str.charAt(i) == ' ') {
+      count++;
+    }
+  }
+  return count;
 }
