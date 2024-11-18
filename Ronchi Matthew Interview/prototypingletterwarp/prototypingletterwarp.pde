@@ -128,15 +128,14 @@ void spiralWarp() {
     char currentChar = textToDisplay.charAt(i);
     if (currentChar != ' ' && currentChar >= 'A' && currentChar <= 'Z') {
       validLetterCount++;
-     
     }
   }
 
   // Calculate the angle step based on the number of valid letters
   angleStep = 360.0 / validLetterCount;
-  
-   //store the warp letters its width and height in a variable
-  
+
+  //store the warp letters its width and height in a variable
+
   float tempHeight = 128;
 
 
@@ -151,6 +150,8 @@ void spiralWarp() {
     float x = cos(radians(angle)) * radius;
     float y = sin(radians(angle)) * radius;
 
+    if(validLetterIndex < textToDisplay.length()){
+    println("letter length: " + letters.length + "index " + validLetterIndex);
     char currentChar = textToDisplay.charAt(validLetterIndex);
 
     if (currentChar != ' ' && currentChar >= 'A' && currentChar <= 'Z') { // Only process valid letters
@@ -162,24 +163,37 @@ void spiralWarp() {
         translate(x, y);
         rotate(radians(angle));
         image(currentLetter, 0, 0, tempWidth, tempHeight);  // Draw the letter at the correct position
+
+        float radiusMultiplier = 1.1;
+        translate(x, y);
+        x = cos(radians(angle)) * radius * radiusMultiplier;
+        y = sin(radians(angle)) * radius * radiusMultiplier ;
+        image(currentLetter, 0, 0, tempWidth, tempHeight);
         pop();
       } else {
         println("Image not loaded for letter: " + currentChar);
       }
-  println(currentChar);
-      validLetterIndex++;  // Increment valid letter index
+      println(currentChar, validLetterIndex);
+      //validLetterIndex++;  // Increment valid letter index
     } else {
       // Skip invalid characters (spaces)
-      println("Skipping invalid character: " + currentChar);
-      validLetterIndex++;
+      println("Skipping invalid character: " + currentChar + " " + validLetterIndex);
+      //validLetterIndex++;
+
+
       angle -= angleStep; //we want to increment the valid letter index so we bruhs over the space but then spatially we cant go forward so we go back
     }
+    validLetterIndex++;
+    
+    }
   }
+  
+  
+  
 
 
-   angleForWarp += 0.03;
-   spinAngleStart += 0.69;
- 
+  angleForWarp += 0.03;
+  spinAngleStart += 0.69;
 }
 
 
