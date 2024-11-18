@@ -178,6 +178,7 @@ void spiralWarp() {
 
 
    angleForWarp += 0.03;
+   spinAngleStart += 0.69;
  
 }
 
