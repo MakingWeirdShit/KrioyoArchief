@@ -1,4 +1,11 @@
+import processing.sound.*;
 
+FFT fft;
+SoundFile soundFile;
+AudioIn in;
+
+int bands = 256;
+float[] spectrum = new float[bands];
 PImage warpLetter;
 int startHeight, startWidth;
 float angleForWarp = 0; //NOTE, using an int here(would be wrong) but it gives us weird resultsx
@@ -44,6 +51,14 @@ void setup() {
 
   
   angleStep = 360.0 / (textToDisplay.length() - countSpaces(textToDisplay));
+  
+  
+  //audio
+  soundFile = new SoundFile(this, "Ronchi1Stereo.mp3"); // Load your audio file
+  fft = new FFT(this, bands);
+  fft.input(soundFile); // Set the input for the FFT
+  
+  soundFile.loop(); // Play the sound in a loop
 }
 
 
@@ -123,6 +138,7 @@ void spiralWarp() {
 
   translate(width / 2, height / 2); // Center the visualization
 
+  fft.analyze(spectrum);
   // Count the valid letters (non-space, A-Z)
   int validLetterCount = 0;
   for (int i = 0; i < textToDisplay.length(); i++) {
@@ -152,7 +168,7 @@ void spiralWarp() {
     float y = sin(radians(angle)) * radius;
 
     if (validLetterIndex < textToDisplay.length()) {
-      println("letter length: " + letters.length + "index " + validLetterIndex);
+      //println("letter length: " + letters.length + "index " + validLetterIndex);
       char currentChar = textToDisplay.charAt(validLetterIndex);
 
       if (currentChar != ' ' && currentChar >= 'A' && currentChar <= 'Z') { // Only process valid letters
@@ -160,6 +176,27 @@ void spiralWarp() {
         PImage currentLetter = letters[letterIndexASCII];
 
         if (currentLetter != null) { // Ensure the image is loaded
+        //audio analysis
+        
+        // Map the frequency data to the letter size fluctuation
+          float lowFreq = spectrum[10] * 5;  // Low-frequency band (bass)
+          float midFreq = spectrum[50] * 5;  // Mid-frequency band
+          float highFreq = spectrum[100] * 5; // High-frequency band (treble)
+
+          println("lowFreq " + lowFreq + " midFreg: " + midFreq + " highFreq: " + highFreq);
+          // Map frequencies to scaling factors (adjust scale ranges as needed)
+          float scaleFactorAudio = map(lowFreq, 0, 1, 0.9, 1.2); // Adjust scaling range
+          //float warpFactorAudio = map(midFreq, 0, 1, 0.5, 2); // Adjust warp range
+
+          // Apply these factors to the letter size
+           tempWidth  *= scaleFactorAudio;
+           tempHeight  *= scaleFactorAudio;
+
+          // Apply additional distortion with high-frequency
+          tempWidth *= (1 + highFreq * 0.5);  // Adding high frequency influence
+        
+        
+        
           push();
           translate(x, y);
           rotate(radians(angle));
@@ -178,7 +215,7 @@ void spiralWarp() {
         } else {
           println("Image not loaded for letter: " + currentChar);
         }
-        println(currentChar, validLetterIndex);
+        //println(currentChar, validLetterIndex);
         //validLetterIndex++;  // Increment valid letter index
       } else {
         // Skip invalid characters (spaces)
