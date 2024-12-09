@@ -26,7 +26,7 @@ float angleStep;
 
 int letterIndex = 0;
 void setup() {
-  size(1000, 1000);
+  fullScreen();
   warpLetter = loadImage("data/R.png");
   startHeight = warpLetter.height;
   startWidth = warpLetter.width;
@@ -153,7 +153,7 @@ void spiralWarp() {
 
   //store the warp letters its width and height in a variable
 
-  float tempHeight = 91;
+  float tempHeight = 158;
 
 
   //warp in x based on cos.
