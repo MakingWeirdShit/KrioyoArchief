@@ -1,5 +1,7 @@
 import processing.sound.*;
 
+
+
 FFT fft;
 SoundFile soundFile;
 AudioIn in;
@@ -27,6 +29,7 @@ float angleStep;
 int letterIndex = 0;
 void setup() {
   fullScreen();
+  frameRate(25);
   warpLetter = loadImage("data/R.png");
   startHeight = warpLetter.height;
   startWidth = warpLetter.width;
@@ -54,11 +57,13 @@ void setup() {
   
   
   //audio
-  soundFile = new SoundFile(this, "Ronchi1Stereo.mp3"); // Load your audio file
+  soundFile = new SoundFile(this, "Ronchi Matthew Interview.mp3"); // Load your audio file
   fft = new FFT(this, bands);
   fft.input(soundFile); // Set the input for the FFT
   
   soundFile.loop(); // Play the sound in a loop
+  
+  
 }
 
 
@@ -66,6 +71,7 @@ void draw() {
 
   minimumWidth = 6;
   spiralWarp();
+  
 }
 
 //under this we will put code for iterations in order, this to keep older code
@@ -114,7 +120,7 @@ void simpleGoofyWarpInY() {
 
 
 void simpleWarpIntendedEffect() { //actual intended warp i wanted to make
-  background(255);
+  background(204, 55, 41);
 
   //i want sum code that will warp my letter back and forth bigger and smaller but only on the y axis or x axis or both depending on what i decide
 
@@ -134,7 +140,7 @@ void simpleWarpIntendedEffect() { //actual intended warp i wanted to make
 }
 
 void spiralWarp() {
-  background(255);
+  background(204, 55, 41);
 
   translate(width / 2, height / 2); // Center the visualization
 
@@ -163,6 +169,8 @@ void spiralWarp() {
 
   // Loop to draw letters on the circle
   int validLetterIndex = 0;  // To keep track of valid letters only
+  
+  tint(color(196, 127, 50));
   for (float angle = spinAngleStart; angle < spinAngleStart + 360; angle += angleStep) {
     float x = cos(radians(angle)) * radius;
     float y = sin(radians(angle)) * radius;
@@ -200,7 +208,9 @@ void spiralWarp() {
           push();
           translate(x, y);
           rotate(radians(angle));
+          
           image(currentLetter, 0, 0, tempWidth, tempHeight);  // Draw the letter at the correct position
+          
           pop();
 
 
@@ -235,6 +245,8 @@ void spiralWarp() {
 
   angleForWarp += 0.03;
   spinAngleStart += 0.69;
+  //noTint();
+  
 }
 
 
@@ -247,4 +259,23 @@ int countSpaces(String str) {
     }
   }
   return count;
+}
+
+void drawLetterWithColor(PImage letterImage, float x, float y, float tempWidth, float tempHeight, color c) {
+  push();
+  translate(x, y);
+  
+  // Set the color
+  tint(c);
+  
+  // Change blending mode to add color to black images
+  blendMode(ADD);
+
+  // Draw the letter with the new tint
+  image(letterImage, 0, 0, tempWidth, tempHeight);
+
+  // Reset the blending mode to default
+  blendMode(BLEND);
+
+  pop();
 }
