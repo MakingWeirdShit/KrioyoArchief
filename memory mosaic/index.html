@@ -9,11 +9,12 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background-color: #002B7F;
     }
     h1 {
       text-align: center;
       margin: 20px 0;
+      color:#fff;
     }
     
     /* Mosaic grid */
@@ -39,6 +40,7 @@
     
     .tile:hover {
       transform: scale(1.03);
+      border: 2px solid #F9E814;
     }
     
     .tile img {
@@ -49,8 +51,8 @@
     
     /* Dynamic tile sizes */
     .tile[data-size="large"] {
-      grid-column: span 2;
-      grid-row: span 2;
+      grid-column: span 3;
+      grid-row: span 3;
     }
     
     .tile[data-size="wide"] {
@@ -121,8 +123,14 @@
     <div class="tile" data-size="tall" data-clip="clips/konoshi.mp4" data-link="https://www.youtube.com/watch?v=FiZPS6jjRw0">
       <img src="images/konoshi.png" alt="Archival Material 7: konoshi">
     </div>
-    <div class="tile" data-size="wide" data-clip="clips/bus di amebiente.mp4" data-link="https://youtu.be/dCtMovndJ-w?si=EFvSbVijSIfx4EX_">
+    <div class="tile" data-size="wide" data-clip="clips/bus di ambiente.mp4" data-link="https://youtu.be/dCtMovndJ-w?si=EFvSbVijSIfx4EX_">
       <img src="images/busdiambiente.png" alt="Archival Material 8: bus di ambiente">
+    </div>
+    <div class="tile" data-size="tall" data-clip="clips/historia di shap.mp4" data-link="https://youtu.be/SAOyviD2IiE?si=_OWdExQeJ8D_ThVR">
+      <img src="images/historiadishap.png" alt="Archival Material 9: historia di shap">
+    </div>
+    <div class="tile" data-size="wide" data-clip="clips/bekita.mp4" data-link="https://www.youtube.com/watch?v=FjJHPJfYqKI">
+      <img src="images/bekita.png" alt="Archival Material 9: historia di shap">
     </div>
   </div>
 
